@@ -44,4 +44,13 @@ router.post("/upload-sales-data", upload.single("file"), (req, res) => __awaiter
 router.get("/sales-summaries", (req, res) => {
     res.json(summaries);
 });
+router.get("/sales-summaries/:id", (req, res) => {
+    const { id } = req.params;
+    const summary = summaries.find((s) => s.id === id);
+    if (!summary) {
+        res.status(404).json({ message: "Summary not found." });
+        return;
+    }
+    res.json(summary);
+});
 exports.default = router;

@@ -1,5 +1,5 @@
-import { useState, useEffect} from "react";
-import type {ChangeEvent } from "react";
+import { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
 
 interface SalesSummary {
   id: string;
@@ -33,7 +33,10 @@ export default function App() {
   }, []);
 
   const handleUpload = async () => {
-    if (!file) return setStatus("Select a CSV file");
+    if (!file) {
+      setStatus("Select a CSV file");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", file);
@@ -69,14 +72,25 @@ export default function App() {
         </h1>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
-          <input
-            type="file"
-            accept=".csv"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFile(e.target.files?.[0] ?? null)
-            }
-            className="border border-gray-800 rounded px-3 py-2 w-full sm:w-auto"
-          />
+          <div className="flex items-center gap-4">
+            <input
+              id="fileUpload"
+              type="file"
+              accept=".csv"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setFile(e.target.files?.[0] ?? null)
+              }
+              className="hidden"
+            />
+            <label htmlFor="fileUpload" className="cursor-pointer">
+              <img
+                src="/file-upload.png"
+                alt="Upload"
+                className="w-12 h-12 hover:scale-105 transition-transform"
+              />
+            </label>
+            {file && <span className="text-sm text-gray-700">{file.name}</span>}
+          </div>
           <button
             onClick={handleUpload}
             disabled={loading || !file}
@@ -90,13 +104,7 @@ export default function App() {
           </button>
         </div>
 
-        {status && (
-          <div
-            className={`text-sm mb-6`}
-          >
-            {status}
-          </div>
-        )}
+        {status && <div className="text-sm mb-6">{status}</div>}
 
         <h2 className="text-xl font-semibold mb-3">Uploaded Files</h2>
         {summaries.length === 0 ? (
@@ -131,11 +139,21 @@ export default function App() {
             <h3 className="text-lg font-bold text-blue-700 mb-2">
               Upload Details
             </h3>
-            <p><strong>ID:</strong> {selected.id}</p>
-            <p><strong>Timestamp:</strong> {selected.timestamp}</p>
-            <p><strong>Total Records:</strong> {selected.totalRecords}</p>
-            <p><strong>Total Quantity:</strong> {selected.totalQuantity}</p>
-            <p><strong>Total Revenue:</strong> ${selected.totalRevenue.toFixed(2)}</p>
+            <p>
+              <strong>ID:</strong> {selected.id}
+            </p>
+            <p>
+              <strong>Timestamp:</strong> {selected.timestamp}
+            </p>
+            <p>
+              <strong>Total Records:</strong> {selected.totalRecords}
+            </p>
+            <p>
+              <strong>Total Quantity:</strong> {selected.totalQuantity}
+            </p>
+            <p>
+              <strong>Total Revenue:</strong> ${selected.totalRevenue.toFixed(2)}
+            </p>
           </div>
         )}
       </div>
